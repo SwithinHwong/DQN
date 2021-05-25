@@ -25,7 +25,7 @@ class DQNAgent():
 	ts_frame = 0
 	ts = time.time()
 
-	Memory = namedtuple('Memory', ['obs', 'action', 'new_obs', 'reward', 'done'], verbose=False, rename=False)
+	Memory = namedtuple('Memory', ['obs', 'action', 'new_obs', 'reward', 'done'], rename=False)
 
 	def __init__(self, env, device, hyperparameters, summary_writer=None):
 		'''

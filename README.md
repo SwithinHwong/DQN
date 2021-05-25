@@ -130,6 +130,13 @@ Install gym
 !pip install gym[atari]
 ```
 
+Install with Anaconda in  Python3.8
+```
+pip install gym[atari]
+conda install -c conda-forge ffmpeg==4.2.2
+ln -s ~/anaconda3/lib/libopenh264.so ~/anaconda3/lib/libopenh264.so.5
+```
+
 
 ## To run TensorBoard in Google Colab
 

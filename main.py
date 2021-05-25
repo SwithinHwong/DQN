@@ -39,7 +39,8 @@ TEST_FREQUENCY = 10
 
 ENV_NAME = "PongNoFrameskip-v4"
 SAVE_VIDEO = True
-DEVICE = 'cpu' # or 'cuda'
+# DEVICE = 'cpu' # or 'cuda'
+DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 SUMMARY_WRITER = True
 
 LOG_DIR = 'content/runs'
