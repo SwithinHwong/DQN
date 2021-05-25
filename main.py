@@ -37,7 +37,13 @@ BATCH_SIZE = 32
 MAX_N_GAMES = 3000
 TEST_FREQUENCY = 10
 
+FIRE_AT_BEGINNING = True
 ENV_NAME = "PongNoFrameskip-v4"
+# ENV_NAME = "BreakoutNoFrameskip-v4"
+# ENV_NAME = "UpNDown-v0"
+# ENV_NAME, FIRE_AT_BEGINNING = "Skiing-v0", False
+# ENV_NAME = "TennisNoFrameskip-v4"
+
 SAVE_VIDEO = True
 # DEVICE = 'cpu' # or 'cuda'
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -50,7 +56,7 @@ name = 'prv'
 if __name__ == '__main__':
 
 	# create the environment
-	env = atari_wrappers.make_env(ENV_NAME)
+	env = atari_wrappers.make_env(ENV_NAME, fire=FIRE_AT_BEGINNING)
 	if SAVE_VIDEO:
 		# save the video of the games
 		env = gym.wrappers.Monitor(env, "main-"+ENV_NAME, force=True)
