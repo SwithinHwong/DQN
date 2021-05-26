@@ -64,25 +64,27 @@ class DuelingDQN(nn.Module):
 		super(DuelingDQN, self).__init__()
 
 		self.conv = nn.Sequential(
-			nn.Conv2d(input_shape[0], 32, kernel_size=8, stride=4),
+			nn.Conv2d(input_shape[0], 32, kernel_size=8, stride=4),  # o/p shape (32, 20, 20)
 			nn.BatchNorm2d(32),
 			nn.ReLU(),
-			nn.Conv2d(32, 64, kernel_size=4, stride=2),
+			nn.Conv2d(32, 64, kernel_size=4, stride=2),  # o/p shape (64, 9, 9)
 			nn.BatchNorm2d(64),
 			nn.ReLU(),
-			nn.Conv2d(64, 64, kernel_size=3, stride=1),
+			nn.Conv2d(64, 64, kernel_size=3, stride=1),  # o/p shape (64, 7, 7)
 			nn.BatchNorm2d(64),
 			nn.ReLU())
 
 		conv_out_size = self._get_conv_out(input_shape)
 		# Predict the actions advantage
 		self.fc_a = nn.Sequential(
+			nn.Flatten(),
 			nn.Linear(conv_out_size, 512),
 			nn.ReLU(),
 			nn.Linear(512, n_actions))
 
 		# Predict the state value
 		self.fc_v = nn.Sequential(
+			nn.Flatten(),
 			nn.Linear(conv_out_size, 512),
 			nn.ReLU(),
 			nn.Linear(512, 1))
@@ -92,8 +94,7 @@ class DuelingDQN(nn.Module):
 		return int(np.prod(o.size())) # ..to obtain the output shape
 
 	def forward(self, x):
-		batch_size = x.size()[0]
-		conv_out = self.conv(x).view(batch_size, -1) # apply convolution layers and flatten the results
+		conv_out = self.conv(x) # apply convolution layers and flatten the results
 
 		adv = self.fc_a(conv_out)
 		val = self.fc_v(conv_out)
@@ -112,13 +113,13 @@ class DQN(nn.Module):
 
 		# 3 convolutional layers. Take an image as input (NB: the BatchNorm layers aren't in the paper but they increase the convergence)
 		self.conv = nn.Sequential(
-			nn.Conv2d(input_shape[0], 32, kernel_size=8, stride=4),
+			nn.Conv2d(input_shape[0], 32, kernel_size=8, stride=4),  # o/p shape (32, 20, 20)
 			nn.BatchNorm2d(32),
 			nn.ReLU(),
-			nn.Conv2d(32, 64, kernel_size=4, stride=2),
+			nn.Conv2d(32, 64, kernel_size=4, stride=2),  # o/p shape (64, 9, 9)
 			nn.BatchNorm2d(64),
 			nn.ReLU(),
-			nn.Conv2d(64, 64, kernel_size=3, stride=1),
+			nn.Conv2d(64, 64, kernel_size=3, stride=1),  # o/p shape (64, 7, 7)
 			nn.BatchNorm2d(64),
 			nn.ReLU())
 
@@ -129,11 +130,13 @@ class DQN(nn.Module):
 		if noisy_net:
 			# In case of NoisyNet use noisy linear layers
 			self.fc = nn.Sequential(
+				nn.Flatten(),
 				NoisyLinear(conv_out_size, 512),
 				nn.ReLU(),
 				NoisyLinear(512, n_actions))
 		else:
 			self.fc = nn.Sequential(
+				nn.Flatten(),
 				nn.Linear(conv_out_size, 512),
 				nn.ReLU(),
 				nn.Linear(512, n_actions))
@@ -144,6 +147,5 @@ class DQN(nn.Module):
 		return int(np.prod(o.size())) # ..to obtain the output shape
 
 	def forward(self, x):
-		batch_size = x.size()[0]
-		conv_out = self.conv(x).view(batch_size, -1) # apply convolution layers and flatten the results
+		conv_out = self.conv(x) # apply convolution layers and flatten the results
 		return self.fc(conv_out) # apply fc layers
