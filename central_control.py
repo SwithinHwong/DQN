@@ -63,7 +63,7 @@ class CentralControl():
 		# forawrd pass
 		q_values_t = self.moving_nn(state_t)
 		# get the maximum value of the output (i.e. the best action to take)
-		_, act_t = torch.max(q_values_t, dim=1)
+		_, act_t = torch.max(q_values_t, dim=1)  # act_t is the index of best action
 		return int(act_t.item())
 
 
